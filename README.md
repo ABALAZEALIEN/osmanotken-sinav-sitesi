@@ -1,1 +1,0 @@
-# osmanotken-sinav-sitesi
