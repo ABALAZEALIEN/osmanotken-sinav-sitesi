@@ -99,26 +99,23 @@
     console.log("Yeni Kullanıcı Kaydedildi:", usernameInput, userClassInput);
 
     // Tanıtım sayfasına yönlendirme
-    window.location.href = 'tanıtımsayfası.html';
+    window.location.href = 'tanitimsayfasi.html';
 }
-
-    // Firebase'e bilgileri kaydet
-    firebaseKaydet(usernameInput, userClassInput);
-
-    // Tanıtım sayfasına yönlendirme
-    window.location.href = 'tanıtımsayfası.html';
-    function firebaseKaydet(username, userClass) {
+function firebaseKaydet(username, userClass) {
     firebase.database().ref("kullanicilar/" + username).set({
         sinif: userClass,
         zaman: new Date().toLocaleString()
     }).then(() => {
         console.log("Kullanıcı bilgileri Firebase'e başarıyla kaydedildi!");
+        alert("Başarıyla kaydedildi! Şimdi sınav sayfasına yönlendiriliyorsunuz.");
+        window.location.href = 'tanitimsayfasi.html'; // **Yönlendirme burada olmalı**
     }).catch(error => {
         console.error("Firebase kaydedilirken bir hata oluştu:", error);
     });
 }
-
     </script>
+    
+    
 </body>
 </html>
 

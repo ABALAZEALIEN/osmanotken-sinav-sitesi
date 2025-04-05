@@ -1,9 +1,9 @@
 const questionsByClass = {
     "9": [
-        { text: "Bu 9. sınıfın ilk sorusu", image: "images/9.sınıfsoru1.jpg" }
+        { text: "Bu 9. sınıfın ilk sorusu", image: "images/9.sinifsoru1.jpg" }
     ],
     "11": [
-        { text: "Bu 11. sınıfın ilk sorusu", image: "images/11.sınıfsoru1.jpg" }
+        { text: "Bu 11. sınıfın ilk sorusu", image: "images/11.sinifsoru1.jpg" }
     ]
 };
 let currentQuestion = 0; // Mevcut soruyu takip eder
@@ -17,10 +17,15 @@ function loadQuestion(questions) {
     const questionContainer = document.getElementById('question-container');
     const question = questions[currentQuestion];
 
+    if (!question) {
+        questionContainer.innerHTML = "<h2>Bir hata oluştu. Lütfen tekrar deneyin.</h2>";
+        return;
+    }
+
     questionContainer.innerHTML = `
-        <div>
+        <div class="question">
             <h2>${question.text}</h2>
-            <img src="${question.image}" alt="Soru Resmi" style="width: 100%; max-height: 300px;">
+            <img src="${question.image}" alt="Soru Resmi" style="width: 100%; max-height: 300px; border-radius: 8px;">
         </div>
     `;
 }

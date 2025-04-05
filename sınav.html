@@ -118,6 +118,7 @@
         </div>
         <button class="start-button" onclick="sinaviBaslat()">Sınava Başla</button>
     </div>
+    <div id="timer" style="font-size: 20px; text-align: center; margin-bottom: 20px;">Kalan Süre: 15:00</div>
 
     <!-- Sınav Bölümü -->
     <div id="sinav" class="container" style="display: none;">
@@ -149,6 +150,14 @@
 </script>
 
     <script>
+        const questionsByClass = {
+    "9": [
+        { text: "Bu 9. sınıfın ilk sorusu", image: "images/9.sinifsoru1.jpg" }
+    ],
+    "11": [
+        { text: "Bu 11. sınıfın ilk sorusu", image: "images/11.sinifsoru1.jpg" }
+    ]
+};
         
         // Sınıflara göre sıralama listesi
         const rankingByClass = {
@@ -174,14 +183,36 @@
         let userClass = ""; // Kullanıcı sınıfı
 
         function sinaviBaslat() {
-            // Kullanıcı adını ve sınıfını giriş sayfasından Local Storage ile alma
-            userName = localStorage.getItem("userName") || "Bilinmeyen Kullanıcı";
-            userClass = localStorage.getItem("userClass") || "9"; // Varsayılan sınıf "9"
+    // Kullanıcı bilgilerini Local Storage'dan al
+    userName = localStorage.getItem("userName") || "Bilinmeyen Kullanıcı";
+    userClass = localStorage.getItem("userClass") || "9"; // Varsayılan değer
 
-            document.getElementById('kurallar-container').style.display = 'none';
-            document.getElementById('sinav').style.display = 'block';
-            loadQuestion();
+    document.getElementById('kurallar-container').style.display = 'none';
+    document.getElementById('sinav').style.display = 'block';
+
+    const questions = getQuestionsForClass(userClass); // Kullanıcının sınıfına ait soruları al
+    loadQuestion(questions); // İlk soruyu yükle
+
+    startTimer(900); // Süre (örneğin: 15 dakika)
+}
+function startTimer(duration) {
+    timeRemaining = duration;
+    const timerElement = document.getElementById('timer');
+
+    const timerInterval = setInterval(() => {
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert("Süreniz doldu! Sınav sona erdi.");
+            return;
         }
+
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerElement.textContent = `Kalan Süre: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        timeRemaining--; // Süre azalsın
+    }, 1000);
+}
 
         function loadQuestion() {
             const questionContainer = document.getElementById('question-container');
@@ -268,6 +299,20 @@ function siralamayiGetir() {
         document.getElementById('siralama-container').innerHTML = "Sıralama verisi alınamadı.";
     });
 }
+const timerInterval = setInterval(() => {
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+
+    timerElement.textContent = `Kalan Süre: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+    if (timeRemaining <= 0) {
+        clearInterval(timerInterval);
+        alert("Süreniz doldu! Sınav sona erdi.");
+    }
+
+    timeRemaining -= 1;
+}, 1000);
+
     </script>
 </body>
 <div id="sinav" class="container" style="display: none;">
@@ -282,4 +327,9 @@ function siralamayiGetir() {
 
 <!-- Sıralama alanı -->
 <div id="siralama-container" class="container"></div>
+<div id="sinav" class="container" style="display: none;">
+    <div id="timer">Kalan Süre: 15:00</div>
+    <div id="question-container"></div>
+</div>
+
 </html>
