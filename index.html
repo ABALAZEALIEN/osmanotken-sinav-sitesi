@@ -2,6 +2,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDqvgm-ZvhCTtsdYkr9zeMS5rs3bLoh70",
+    authDomain: "sinav-sitesi.firebaseapp.com",
+    projectId: "sinav-sitesi",
+    storageBucket: "sinav-sitesi.appspot.com",
+    messagingSenderId: "890357777142",
+    appId: "1:890357777142:web:9e777b09f750188fb5f169",
+    measurementId: "G-Y8Q6X2XQ2R"
+  };
+  const app = firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ÖOAL Yazılım Giriş</title>

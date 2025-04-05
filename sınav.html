@@ -227,6 +227,16 @@
                 ${rankingMessage}
             `;
         }
+        function puanKaydet(kullaniciAdi, puan) {
+  firebase.database().ref("kullanicilar/" + kullaniciAdi).set({
+    puan: puan,
+    zaman: new Date().toLocaleString()
+  });
+}
+
+// Örnek kullanım
+puanKaydet("Ali", 85);
     </script>
 </body>
+
 </html>
