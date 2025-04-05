@@ -92,6 +92,16 @@
         return;
     }
 
+    // Local Storage'a yeni bilgileri kaydet
+    localStorage.setItem("userName", usernameInput);
+    localStorage.setItem("userClass", userClassInput);
+
+    console.log("Yeni Kullanıcı Kaydedildi:", usernameInput, userClassInput);
+
+    // Tanıtım sayfasına yönlendirme
+    window.location.href = 'tanıtımsayfası.html';
+}
+
     // Firebase'e bilgileri kaydet
     firebaseKaydet(usernameInput, userClassInput);
 
@@ -107,7 +117,7 @@
         console.error("Firebase kaydedilirken bir hata oluştu:", error);
     });
 }
-}
+
     </script>
 </body>
 </html>

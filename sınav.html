@@ -252,13 +252,15 @@ function siralamayiGetir() {
             document.getElementById('siralama-container').innerHTML = "Henüz sıralama verisi yok.";
             return;
         }
+
         let siralamaListesi = Object.entries(data)
-            .sort((a, b) => b[1].puan - a[1].puan)
+            .filter(entry => entry[1].sinif === userClass) // Kullanıcının sınıfını filtrele
+            .sort((a, b) => b[1].puan - a[1].puan) // Puana göre sırala
             .map((entry, index) => `${index + 1}. ${entry[0]} - ${entry[1].puan} puan (${entry[1].sinif}. sınıf)`)
             .join("<br>");
 
         document.getElementById('siralama-container').innerHTML = `
-            <h2>Sıralama Listesi</h2>
+            <h2>${userClass}. Sınıf Sıralaması</h2>
             ${siralamaListesi}
         `;
     }).catch(error => {
