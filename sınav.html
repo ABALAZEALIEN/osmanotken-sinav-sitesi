@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -128,8 +129,27 @@
             <button class="next" onclick="nextQuestion()">Sonraki Soru</button>
         </div>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script>
+    // Firebase yapılandırması
+    const firebaseConfig = {
+        apiKey: "AIzaSyDqvgm-ZvhCTtsdYkr9zeMS5rs3bLoh70",
+        authDomain: "sinav-sitesi.firebaseapp.com",
+        projectId: "sinav-sitesi",
+        storageBucket: "sinav-sitesi.appspot.com",
+        messagingSenderId: "890357777142",
+        appId: "1:890357777142:web:9e777b09f750188fb5f169",
+        measurementId: "G-Y8Q6X2XQ2R"
+    };
+
+    // Firebase'i başlat
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+</script>
 
     <script>
+        
         // Sınıflara göre sıralama listesi
         const rankingByClass = {
             "9": [], "10": [], "11": [], "12": []
@@ -208,35 +228,56 @@
         }
 
         function endQuiz() {
-            // Puanı hesaplama (örnek: doğru cevap sayısı)
-            let score = userAnswers.filter(answer => answer !== null).length;
+    let score = userAnswers.filter(answer => answer !== null).length;
 
-            // Sınıf sıralamasına ekleme
-            rankingByClass[userClass].push({ name: userName, score: score });
-            rankingByClass[userClass].sort((a, b) => b.score - a.score);
+    // Firebase'e kullanıcı puanını kaydet
+    firebase.database().ref("kullanicilar/" + userName).set({
+        sinif: userClass,
+        puan: score,
+        zaman: new Date().toLocaleString()
+    }).then(() => {
+        console.log("Kullanıcı bilgileri ve puanı Firebase'e kaydedildi.");
+    }).catch(error => {
+        console.error("Firebase kaydedilirken bir hata oluştu:", error);
+    });
 
-            let rankingMessage = `<h2>${userClass}. Sınıf Sıralaması</h2><ul>`;
-            rankingByClass[userClass].forEach((student, index) => {
-                rankingMessage += `<li>${index + 1}. ${student.name} - ${student.score} puan</li>`;
-            });
-            rankingMessage += '</ul>';
+    siralamayiGetir(); // Sıralama gösterimi
 
-            document.getElementById('sinav').innerHTML = `
-                <h2>Sınav Tamamlandı!</h2>
-                <p>Sınav puanınız: ${score}</p>
-                ${rankingMessage}
-            `;
-        }
-        function puanKaydet(kullaniciAdi, puan) {
-  firebase.database().ref("kullanicilar/" + kullaniciAdi).set({
-    puan: puan,
-    zaman: new Date().toLocaleString()
-  });
+    alert(`Sınav tamamlandı! Puanınız: ${score}`);
 }
+function siralamayiGetir() {
+    firebase.database().ref("kullanicilar").orderByChild("puan").once("value", snapshot => {
+        let data = snapshot.val();
+        if (!data) {
+            document.getElementById('siralama-container').innerHTML = "Henüz sıralama verisi yok.";
+            return;
+        }
+        let siralamaListesi = Object.entries(data)
+            .sort((a, b) => b[1].puan - a[1].puan)
+            .map((entry, index) => `${index + 1}. ${entry[0]} - ${entry[1].puan} puan (${entry[1].sinif}. sınıf)`)
+            .join("<br>");
 
-// Örnek kullanım
-puanKaydet("Ali", 85);
+        document.getElementById('siralama-container').innerHTML = `
+            <h2>Sıralama Listesi</h2>
+            ${siralamaListesi}
+        `;
+    }).catch(error => {
+        console.error("Sıralama getirirken hata oluştu:", error);
+        document.getElementById('siralama-container').innerHTML = "Sıralama verisi alınamadı.";
+    });
+}
     </script>
 </body>
+<div id="sinav" class="container" style="display: none;">
+    <div id="question-container">
+        <!-- Sorular burada görünecek -->
+    </div>
+    <div class="navigation">
+        <button class="prev" onclick="previousQuestion()">Önceki Soru</button>
+        <button class="next" onclick="nextQuestion()">Sonraki Soru</button>
+    </div>
+</div>
 
+<!-- Sıralama alanı -->
+<div id="siralama-container" class="container"></div>
 </html>
