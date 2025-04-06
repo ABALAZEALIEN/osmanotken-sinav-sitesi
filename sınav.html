@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +12,7 @@
             padding: 20px;
             margin: 0;
         }
+
         .container {
             max-width: 800px;
             margin: auto;
@@ -21,24 +21,28 @@
             border-radius: 15px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+
+        h1, h2 {
             text-align: center;
-            margin-bottom: 20px;
         }
+
         .rules {
             line-height: 1.6;
             margin-bottom: 30px;
         }
+
         .rules ul {
             padding-left: 20px;
         }
+
         .rules li {
             margin-bottom: 8px;
         }
+
         .start-button {
             display: block;
             width: 90%;
-            padding: 15px 20px;
+            padding: 15px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -47,289 +51,94 @@
             cursor: pointer;
             margin: 0 auto;
         }
+
         .start-button:hover {
             background-color: #45a049;
         }
+
         .options {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             margin-top: 20px;
         }
+
         .options button {
             font-size: 16px;
-            padding: 10px 15px;
+            padding: 10px;
             background-color: #f0f0f0;
-            color: #333;
             border: 1px solid #ccc;
             border-radius: 5px;
             margin-bottom: 10px;
             cursor: pointer;
         }
+
         .options button.active {
             background-color: #4CAF50;
             color: white;
         }
+
         .navigation {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
         }
+
         .navigation button {
-            padding: 10px 20px;
+            padding: 10px;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
         }
+
         .navigation .prev {
             background-color: #ccc;
-            color: #666;
         }
-        .navigation .prev.active {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
+
         .navigation .next {
             background-color: #4CAF50;
             color: white;
         }
+
+        #timer {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <!-- Kurallar Bölümü -->
+    <!-- Kurallar ve Başlangıç -->
     <div id="kurallar-container" class="container">
         <h1>Sınav Kuralları</h1>
         <div class="rules">
             <p><strong>Soru Sayısı:</strong> 10 adet.</p>
             <p><strong>Süre:</strong> 15 dakika.</p>
-            <p><strong>Puanlama:</strong></p>
             <ul>
                 <li>Doğru cevap: +1 puan</li>
                 <li>Yanlış cevap: -1 puan</li>
                 <li>Boş bırakma: 0 puan</li>
             </ul>
-            <p><strong>Kurallar:</strong></p>
-            <ul>
-                <li>Sorular arasında geri dönüş yapılabilir.</li>
-                <li>Sınav sırasında sayfayı yenilemeyin ya da kapatmayın.</li>
-                <li>Süreniz dolduğunda sınav otomatik olarak sona erecektir.</li>
-            </ul>
         </div>
         <button class="start-button" onclick="sinaviBaslat()">Sınava Başla</button>
     </div>
-    <div id="timer" style="font-size: 20px; text-align: center; margin-bottom: 20px;">Kalan Süre: 15:00</div>
 
-    <!-- Sınav Bölümü -->
+    <!-- Zamanlayıcı -->
+    <div id="timer">Kalan Süre: 15:00</div>
+
+    <!-- Sınav Alanı -->
     <div id="sinav" class="container" style="display: none;">
-        <div id="question-container">
-            <!-- Sorular burada görünecek -->
-        </div>
+        <div id="question-container"></div>
         <div class="navigation">
             <button class="prev" onclick="previousQuestion()">Önceki Soru</button>
             <button class="next" onclick="nextQuestion()">Sonraki Soru</button>
         </div>
     </div>
+    <div id="siralama-container" class="container" style="display: none;"></div>
+    <div id="sonuclar-container" class="container" style="display: none;"></div>
+    
+
+    <!-- Firebase ve JavaScript -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script>
-    // Firebase yapılandırması
-    const firebaseConfig = {
-        apiKey: "AIzaSyDqvgm-ZvhCTtsdYkr9zeMS5rs3bLoh70",
-        authDomain: "sinav-sitesi.firebaseapp.com",
-        projectId: "sinav-sitesi",
-        storageBucket: "sinav-sitesi.appspot.com",
-        messagingSenderId: "890357777142",
-        appId: "1:890357777142:web:9e777b09f750188fb5f169",
-        measurementId: "G-Y8Q6X2XQ2R"
-    };
-
-    // Firebase'i başlat
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-</script>
-
-    <script>
-        const questionsByClass = {
-    "9": [
-        { text: "Bu 9. sınıfın ilk sorusu", image: "images/9.sinifsoru1.jpg" }
-    ],
-    "11": [
-        { text: "Bu 11. sınıfın ilk sorusu", image: "images/11.sinifsoru1.jpg" }
-    ]
-};
-        
-        // Sınıflara göre sıralama listesi
-        const rankingByClass = {
-            "9": [], "10": [], "11": [], "12": []
-        };
-
-        const questions = [
-            { text: "Soru 1", image: "path/to/image1.jpg" },
-            { text: "Soru 2", image: "path/to/image2.jpg" },
-            { text: "Soru 3", image: "path/to/image3.jpg" },
-            { text: "Soru 4", image: "path/to/image4.jpg" },
-            { text: "Soru 5", image: "path/to/image5.jpg" },
-            { text: "Soru 6", image: "path/to/image6.jpg" },
-            { text: "Soru 7", image: "path/to/image7.jpg" },
-            { text: "Soru 8", image: "path/to/image8.jpg" },
-            { text: "Soru 9", image: "path/to/image9.jpg" },
-            { text: "Soru 10", image: "path/to/image10.jpg" }
-        ];
-
-        let currentQuestion = 0;
-        let userAnswers = Array(10).fill(null);
-        let userName = ""; // Kullanıcı adı
-        let userClass = ""; // Kullanıcı sınıfı
-
-        function sinaviBaslat() {
-    // Kullanıcı bilgilerini Local Storage'dan al
-    userName = localStorage.getItem("userName") || "Bilinmeyen Kullanıcı";
-    userClass = localStorage.getItem("userClass") || "9"; // Varsayılan değer
-
-    document.getElementById('kurallar-container').style.display = 'none';
-    document.getElementById('sinav').style.display = 'block';
-
-    const questions = getQuestionsForClass(userClass); // Kullanıcının sınıfına ait soruları al
-    loadQuestion(questions); // İlk soruyu yükle
-
-    startTimer(900); // Süre (örneğin: 15 dakika)
-}
-function startTimer(duration) {
-    timeRemaining = duration;
-    const timerElement = document.getElementById('timer');
-
-    const timerInterval = setInterval(() => {
-        if (timeRemaining <= 0) {
-            clearInterval(timerInterval);
-            alert("Süreniz doldu! Sınav sona erdi.");
-            return;
-        }
-
-        const minutes = Math.floor(timeRemaining / 60);
-        const seconds = timeRemaining % 60;
-        timerElement.textContent = `Kalan Süre: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-        timeRemaining--; // Süre azalsın
-    }, 1000);
-}
-
-        function loadQuestion() {
-            const questionContainer = document.getElementById('question-container');
-            const question = questions[currentQuestion];
-            questionContainer.innerHTML = `
-                <div class="question">
-                    <h2>${question.text}</h2>
-                    <img src="${question.image}" alt="Soru Resmi" style="width: 100%; max-height: 300px; margin-top: 15px; border-radius: 8px;"/>
-                </div>
-                <div class="options">
-                    ${['A', 'B', 'C', 'D', 'E'].map(letter => `
-                        <button 
-                            class="${userAnswers[currentQuestion] === letter ? 'active' : ''}" 
-                            onclick="selectAnswer('${letter}')">${letter}</button>
-                    `).join('')}
-                </div>
-            `;
-            const prevButton = document.querySelector('.prev');
-            const nextButton = document.querySelector('.next');
-            prevButton.disabled = currentQuestion === 0;
-            prevButton.classList.toggle('active', currentQuestion !== 0);
-            nextButton.textContent = currentQuestion === questions.length - 1 ? 'Sınavı Bitir' : 'Sonraki Soru';
-        }
-
-        function selectAnswer(letter) {
-            userAnswers[currentQuestion] = userAnswers[currentQuestion] === letter ? null : letter;
-            loadQuestion();
-        }
-
-        function nextQuestion() {
-            if (currentQuestion < questions.length - 1) {
-                currentQuestion++;
-                loadQuestion();
-            } else {
-                endQuiz();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                loadQuestion();
-            }
-        }
-
-        function endQuiz() {
-    let score = userAnswers.filter(answer => answer !== null).length;
-
-    // Firebase'e kullanıcı puanını kaydet
-    firebase.database().ref("kullanicilar/" + userName).set({
-        sinif: userClass,
-        puan: score,
-        zaman: new Date().toLocaleString()
-    }).then(() => {
-        console.log("Kullanıcı bilgileri ve puanı Firebase'e kaydedildi.");
-    }).catch(error => {
-        console.error("Firebase kaydedilirken bir hata oluştu:", error);
-    });
-
-    siralamayiGetir(); // Sıralama gösterimi
-
-    alert(`Sınav tamamlandı! Puanınız: ${score}`);
-}
-function siralamayiGetir() {
-    firebase.database().ref("kullanicilar").orderByChild("puan").once("value", snapshot => {
-        let data = snapshot.val();
-        if (!data) {
-            document.getElementById('siralama-container').innerHTML = "Henüz sıralama verisi yok.";
-            return;
-        }
-
-        let siralamaListesi = Object.entries(data)
-            .filter(entry => entry[1].sinif === userClass) // Kullanıcının sınıfını filtrele
-            .sort((a, b) => b[1].puan - a[1].puan) // Puana göre sırala
-            .map((entry, index) => `${index + 1}. ${entry[0]} - ${entry[1].puan} puan (${entry[1].sinif}. sınıf)`)
-            .join("<br>");
-
-        document.getElementById('siralama-container').innerHTML = `
-            <h2>${userClass}. Sınıf Sıralaması</h2>
-            ${siralamaListesi}
-        `;
-    }).catch(error => {
-        console.error("Sıralama getirirken hata oluştu:", error);
-        document.getElementById('siralama-container').innerHTML = "Sıralama verisi alınamadı.";
-    });
-}
-const timerInterval = setInterval(() => {
-    const minutes = Math.floor(timeRemaining / 60);
-    const seconds = timeRemaining % 60;
-
-    timerElement.textContent = `Kalan Süre: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-    if (timeRemaining <= 0) {
-        clearInterval(timerInterval);
-        alert("Süreniz doldu! Sınav sona erdi.");
-    }
-
-    timeRemaining -= 1;
-}, 1000);
-
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="script.js"></script>
 </body>
-<div id="sinav" class="container" style="display: none;">
-    <div id="question-container">
-        <!-- Sorular burada görünecek -->
-    </div>
-    <div class="navigation">
-        <button class="prev" onclick="previousQuestion()">Önceki Soru</button>
-        <button class="next" onclick="nextQuestion()">Sonraki Soru</button>
-    </div>
-</div>
-
-<!-- Sıralama alanı -->
-<div id="siralama-container" class="container"></div>
-<div id="sinav" class="container" style="display: none;">
-    <div id="timer">Kalan Süre: 15:00</div>
-    <div id="question-container"></div>
-</div>
-
 </html>

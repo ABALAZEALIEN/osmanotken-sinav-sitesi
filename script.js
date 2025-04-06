@@ -1,13 +1,100 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyDqvgm-ZvhCTtsdYkr9zeMS5rs3bLoh70",
+    authDomain: "sinav-sitesi.firebaseapp.com",
+    projectId: "sinav-sitesi",
+    storageBucket: "sinav-sitesi.appspot.com",
+    messagingSenderId: "890357777142",
+    appId: "1:890357777142:web:9e777b09f750188fb5f169",
+    measurementId: "G-Y8Q6X2XQ2R"
+};
+
+// Firebase'i başlat
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
 const questionsByClass = {
     "9": [
-        { text: "Bu 9. sınıfın ilk sorusu", image: "images/9.sinifsoru1.jpg" }
+        { text: "soru 1", image: "sorular/9.sınıf/9.sınıf1.jpg", correct: "C" },
+        { text: "soru 2", image: "sorular/9.sınıf/9.sınıf2.jpg", correct: "D"  },
+        { text: "soru 3", image: "sorular/9.sınıf/9.sınıf3.jpg", correct: "D"  },
+        { text: "soru 4", image: "sorular/9.sınıf/9.sınıf4.jpg", correct: "C"  },
+        { text: "soru 5", image: "sorular/9.sınıf/9.sınıf5.jpg", correct: "E"  },
+        { text: "soru 6", image: "sorular/9.sınıf/9.sınıf6.jpg", correct: "B"  },
+        { text: "soru 7", image: "sorular/9.sınıf/9.sınıf7.jpg", correct: "D" },
+        { text: "soru 8", image: "sorular/9.sınıf/9.sınıf8.jpg", correct: "D"  },
+        { text: "soru 9", image: "sorular/9.sınıf/9.sınıf9.jpg", correct: "C"  },
+        { text: "soru 10", image: "sorular/9.sınıf/9.sınıf10.jpg", correct: "B"  },
+        
+    ],
+    "10": [
+        { text: "soru 1", image: "sorular/10.sınıf/10.sınıf1.jpg", correct: "A"  },
+        { text: "soru 2", image: "sorular/10.sınıf/10.sınıf2.jpg", correct: "C"  },
+        { text: "soru 3", image: "sorular/10.sınıf/10.sınıf3.jpg", correct: "D"  },
+        { text: "soru 4", image: "sorular/10.sınıf/10.sınıf4.jpg", correct: "B"  },
+        { text: "soru 5", image: "sorular/10.sınıf/10.sınıf5.jpg", correct: "C"  },
+        { text: "soru 6", image: "sorular/10.sınıf/10.sınıf6.jpg", correct: "C"  },
+        { text: "soru 7", image: "sorular/10.sınıf/10.sınıf7.jpg", correct: "B"  },
+        { text: "soru 8", image: "sorular/10.sınıf/10.sınıf8.jpg", correct: "E"  },
+        { text: "soru 9", image: "sorular/10.sınıf/10.sınıf9.jpg", correct: "D"  },
+        { text: "soru 10", image: "sorular/10.sınıf/10.sınıf10.jpg", correct: "B"  },
     ],
     "11": [
-        { text: "Bu 11. sınıfın ilk sorusu", image: "images/11.sinifsoru1.jpg" }
+        { text: "soru 1", image: "sorular/11.sınıf/11.sınıf1.jpg", correct: "B"  },
+        { text: "soru 2", image: "sorular/11.sınıf/11.sınıf2.jpg", correct: "D"  },
+        { text: "soru 3", image: "sorular/11.sınıf/11.sınıf3.jpg", correct: "D"  },
+        { text: "soru 4", image: "sorular/11.sınıf/11.sınıf4.jpg", correct: "A"  },
+        { text: "soru 5", image: "sorular/11.sınıf/11.sınıf5.jpg", correct: "B"  },
+        { text: "soru 6", image: "sorular/11.sınıf/11.sınıf6.jpg", correct: "A"  },
+        { text: "soru 7", image: "sorular/11.sınıf/11.sınıf7.jpg", correct: "D"  },
+        { text: "soru 8", image: "sorular/11.sınıf/11.sınıf8.jpg", correct: "D"  },
+        { text: "soru 9", image: "sorular/11.sınıf/11.sınıf9.jpg", correct: "D"  },
+        { text: "soru 10", image: "sorular/11.sınıf/11.sınıf10.jpg", correct: "E"  },
+    ],
+    "12": [
+        { text: "soru 1", image: "sorular/12.sınıf/12.sınıf1.jpg", correct: "C"  },
+        { text: "soru 2", image: "sorular/12.sınıf/12.sınıf2.jpg", correct: "E"  },
+        { text: "soru 3", image: "sorular/12.sınıf/12.sınıf3.jpg", correct: "D"  },
+        { text: "soru 4", image: "sorular/12.sınıf/12.sınıf4.jpg", correct: "D"  },
+        { text: "soru 5", image: "sorular/12.sınıf/12.sınıf5.jpg", correct: "D"  },
+        { text: "soru 6", image: "sorular/12.sınıf/12.sınıf6.jpg", correct: "A"  },
+        { text: "soru 7", image: "sorular/12.sınıf/12.sınıf7.jpg", correct: "B"  },
+        { text: "soru 8", image: "sorular/12.sınıf/12.sınıf8.jpg", correct: "E"  },
+        { text: "soru 9", image: "sorular/12.sınıf/12.sınıf9.jpg", correct: "A"  },
+        { text: "soru 10", image: "sorular/12.sınıf/12.sınıf10.jpg", correct: "B"  },
     ]
 };
-let currentQuestion = 0; // Mevcut soruyu takip eder
-let timeRemaining; // Zamanlayıcı için global değişken
+
+let currentQuestion = 0;
+let timeRemaining;
+let userAnswers = Array(10).fill(null);
+let userName = localStorage.getItem("userName") || "Bilinmeyen Kullanıcı";
+let userClass = localStorage.getItem("userClass") || "9";
+
+function sinaviBaslat() {
+    document.getElementById('kurallar-container').style.display = 'none';
+    document.getElementById('sinav').style.display = 'block';
+    const questions = getQuestionsForClass(userClass);
+    loadQuestion(questions);
+    startTimer(900);
+}
+
+function startTimer(duration) {
+    timeRemaining = duration;
+    const timerElement = document.getElementById('timer');
+
+    const timerInterval = setInterval(() => {
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert("Süreniz doldu! Sınav sona erdi.");
+            return;
+        }
+
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerElement.textContent = `Kalan Süre: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        timeRemaining--;
+    }, 1000);
+}
 
 function getQuestionsForClass(userClass) {
     return questionsByClass[userClass] || [];
@@ -18,59 +105,173 @@ function loadQuestion(questions) {
     const question = questions[currentQuestion];
 
     if (!question) {
-        questionContainer.innerHTML = "<h2>Bir hata oluştu. Lütfen tekrar deneyin.</h2>";
+        questionContainer.innerHTML = "<h2>Soru bulunamadı!</h2>";
         return;
     }
 
     questionContainer.innerHTML = `
         <div class="question">
             <h2>${question.text}</h2>
-            <img src="${question.image}" alt="Soru Resmi" style="width: 100%; max-height: 300px; border-radius: 8px;">
+            <img src="${question.image}" alt="Soru Resmi" style="width: 100%; max-height: 300px;">
+        </div>
+        <div class="options">
+            ${['A', 'B', 'C', 'D', 'E'].map(letter => `
+                <button class="${userAnswers[currentQuestion] === letter ? 'active' : ''}" 
+                onclick="selectAnswer('${letter}')">${letter}</button>
+            `).join('')}
         </div>
     `;
 }
 
-function startTimer(duration) {
-    timeRemaining = duration;
-    const timerElement = document.getElementById('timer');
-
-    const timerInterval = setInterval(() => {
-        const minutes = Math.floor(timeRemaining / 60);
-        const seconds = timeRemaining % 60;
-
-        timerElement.textContent = `Kalan Süre: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-        if (timeRemaining <= 0) {
-            clearInterval(timerInterval);
-            alert("Süreniz doldu!");
-        }
-
-        timeRemaining--;
-    }, 1000);
+function selectAnswer(letter) {
+    userAnswers[currentQuestion] = userAnswers[currentQuestion] === letter ? null : letter;
+    loadQuestion(getQuestionsForClass(userClass));
 }
 
-function kaydetVeYönlendir() {
-    const username = document.getElementById("username").value.trim();
-    const userClass = document.getElementById("class").value;
-
-    if (!username || !userClass) {
-        alert("Lütfen tüm bilgileri doldurun.");
-        return;
-    }
-
-    localStorage.setItem("userName", username);
-    localStorage.setItem("userClass", userClass);
-
-    window.location.href = 'sinav.html'; // Sınav sayfasına yönlendir
-}
-
-function sinaviBaslat() {
-    const userClass = localStorage.getItem("userClass") || "9";
+function nextQuestion() {
     const questions = getQuestionsForClass(userClass);
 
-    document.getElementById('kurallar-container').style.display = 'none';
-    document.getElementById('sinav').style.display = 'block';
-
-    startTimer(900); // 15 dakika
-    loadQuestion(questions); // İlk soruyu yükle
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        loadQuestion(questions);
+    } else {
+        endQuiz(); // Son soru olduğunda sınavı bitir ve sonuçları göster
+    }
 }
+
+function previousQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion(getQuestionsForClass(userClass));
+    }
+}
+
+function endQuiz() {
+    let score = 0;
+    let resultsHTML = "<h2>Sınav Sonuçları</h2><ul>";
+    const questions = getQuestionsForClass(userClass);
+
+    // Cevapları değerlendir
+    questions.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const isCorrect = userAnswer === question.correct;
+
+        if (isCorrect) {
+            score++; // Doğru cevap için +1 puan
+        } else if (userAnswer !== null) {
+            score--; // Yanlış cevap için -1 puan
+        }
+
+        resultsHTML += `
+            <li>
+                <strong>${question.text}</strong><br>
+                Kullanıcı cevabı: ${userAnswer || "Boş"} <br>
+                Doğru cevap: <span style="color: ${isCorrect ? 'green' : 'red'}">${question.correct}</span>
+            </li>
+        `;
+    });
+
+    resultsHTML += `</ul><h3>Toplam Puanınız: ${score}</h3>`;
+
+    // Sonuçları ayrı container'da göster
+    document.getElementById('sonuclar-container').innerHTML = resultsHTML;
+    document.getElementById('sonuclar-container').style.display = 'block';
+
+    // Firebase'e kullanıcı bilgilerini kaydet
+    firebase.database().ref(`kullanicilar/${userName}`).set({
+        sinif: userClass,
+        puan: score,
+        zaman: new Date().toLocaleString(),
+        cevaplar: userAnswers
+    }).then(() => {
+        console.log("Kullanıcı bilgileri kaydedildi.");
+        // Sıralamayı güncelle
+        siralamayiGetir();
+    }).catch(error => {
+        console.error("Firebase kaydedilirken bir hata oluştu:", error);
+    });
+
+    alert(`Sınav tamamlandı! Puanınız: ${score}`);
+}
+
+    // Sonuçları "sonuclar-container" içinde göster
+    document.getElementById('sonuclar-container').innerHTML = resultsHTML;
+    document.getElementById('sonuclar-container').style.display = 'block';
+    siralamayiGetir();
+    // Firebase'e kullanıcı bilgilerini kaydet
+    firebase.database().ref(`kullanicilar/${userName}`).set({
+        sinif: userClass,
+        puan: score,
+        zaman: new Date().toLocaleString(),
+        cevaplar: userAnswers
+    }).then(() => {
+        console.log("Kullanıcı bilgileri kaydedildi.");
+        // Sıralamayı güncelle
+        siralamayiGetir();
+    }).catch(error => {
+        console.error("Firebase kaydedilirken bir hata oluştu:", error);
+    });
+
+    alert(`Sınav tamamlandı! Puanınız: ${score}`);
+
+
+    resultsHTML += `</ul><h3>Toplam Puanınız: ${score}</h3>`;
+
+    document.getElementById('siralama-container').innerHTML = resultsHTML;
+    document.getElementById('siralama-container').style.display = 'block';
+
+    firebase.database().ref(`kullanicilar/${userName}`).set({
+        sinif: userClass,
+        puan: score,
+        zaman: new Date().toLocaleString(),
+        cevaplar: userAnswers
+    }).then(() => {
+        console.log("Kullanıcı bilgileri kaydedildi.");
+        siralamayiGetir(); // **Sıralamayı güncelle**
+    }).catch(error => {
+        console.error("Firebase kaydedilirken bir hata oluştu:", error);
+    });
+
+    alert(`Sınav tamamlandı! Puanınız: ${score}`);
+
+    resultsHTML += `</ul><h3>Toplam Puanınız: ${score}</h3>`;
+    
+    // Sonuçları ekrana yazdır
+    document.getElementById('siralama-container').innerHTML = resultsHTML;
+    document.getElementById('siralama-container').style.display = 'block';
+
+    // Firebase'e kullanıcı puanı ve cevaplarını kaydet
+    firebase.database().ref(`kullanicilar/${userName}`).set({
+        sinif: userClass,
+        puan: score,
+        zaman: new Date().toLocaleString(),
+        cevaplar: userAnswers // Kullanıcının tüm cevapları kaydedilir
+    }).then
+    function siralamayiGetir() {
+        firebase.database().ref("kullanicilar").orderByChild("puan").once("value", snapshot => {
+            const data = snapshot.val();
+            if (!data) {
+                document.getElementById('siralama-container').innerHTML = "Henüz sıralama verisi yok.";
+                document.getElementById('siralama-container').style.display = 'block';
+                return;
+            }
+    
+            // Kullanıcının sınıfına göre sıralama ve filtreleme
+            const userClass = localStorage.getItem("userClass");
+            const siralamaListesi = Object.entries(data)
+                .filter(([key, value]) => value.sinif === userClass) // Kullanıcının sınıfını filtrele
+                .sort(([, a], [, b]) => b.puan - a.puan) // Puana göre sıralama
+                .map(([key, value], index) => `${index + 1}. ${key} - ${value.puan} puan (${value.sinif}. sınıf)`)
+                .join("<br>");
+    
+            // Sıralama sonucunu ekrana yazdır
+            document.getElementById('siralama-container').innerHTML = `
+                <h2>${userClass}. Sınıf Sıralaması</h2>
+                ${siralamaListesi}
+            `;
+            document.getElementById('siralama-container').style.display = 'block'; // Sıralama ekranını görünür yap
+        }).catch(error => {
+            console.error("Sıralama getirirken hata oluştu:", error);
+            document.getElementById('siralama-container').innerHTML = "Sıralama verisi alınamadı.";
+        });
+    }
