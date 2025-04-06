@@ -8,7 +8,7 @@ const firebaseConfig = {
     measurementId: "G-Y8Q6X2XQ2R"
 };
 
-// Firebase'i başlat
+
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
@@ -135,7 +135,7 @@ function nextQuestion() {
         currentQuestion++;
         loadQuestion(questions);
     } else {
-        endQuiz(); // Son soru olduğunda sınavı bitir ve sonuçları göster
+        endQuiz(); 
     }
 }
 
@@ -151,15 +151,15 @@ function endQuiz() {
     let resultsHTML = "<h2>Sınav Sonuçları</h2><ul>";
     const questions = getQuestionsForClass(userClass);
 
-    // Cevapları değerlendir
+    
     questions.forEach((question, index) => {
         const userAnswer = userAnswers[index];
         const isCorrect = userAnswer === question.correct;
 
         if (isCorrect) {
-            score++; // Doğru cevap için +1 puan
+            score++; 
         } else if (userAnswer !== null) {
-            score--; // Yanlış cevap için -1 puan
+            score--; 
         }
 
         resultsHTML += `
@@ -173,11 +173,11 @@ function endQuiz() {
 
     resultsHTML += `</ul><h3>Toplam Puanınız: ${score}</h3>`;
 
-    // Sonuçları ayrı container'da göster
+    
     document.getElementById('sonuclar-container').innerHTML = resultsHTML;
     document.getElementById('sonuclar-container').style.display = 'block';
 
-    // Firebase'e kullanıcı bilgilerini kaydet
+   
     firebase.database().ref(`kullanicilar/${userName}`).set({
         sinif: userClass,
         puan: score,
@@ -185,7 +185,7 @@ function endQuiz() {
         cevaplar: userAnswers
     }).then(() => {
         console.log("Kullanıcı bilgileri kaydedildi.");
-        // Sıralamayı güncelle
+        
         siralamayiGetir();
     }).catch(error => {
         console.error("Firebase kaydedilirken bir hata oluştu:", error);
@@ -194,11 +194,11 @@ function endQuiz() {
     alert(`Sınav tamamlandı! Puanınız: ${score}`);
 }
 
-    // Sonuçları "sonuclar-container" içinde göster
+    
     document.getElementById('sonuclar-container').innerHTML = resultsHTML;
     document.getElementById('sonuclar-container').style.display = 'block';
     siralamayiGetir();
-    // Firebase'e kullanıcı bilgilerini kaydet
+    
     firebase.database().ref(`kullanicilar/${userName}`).set({
         sinif: userClass,
         puan: score,
@@ -206,7 +206,7 @@ function endQuiz() {
         cevaplar: userAnswers
     }).then(() => {
         console.log("Kullanıcı bilgileri kaydedildi.");
-        // Sıralamayı güncelle
+        
         siralamayiGetir();
     }).catch(error => {
         console.error("Firebase kaydedilirken bir hata oluştu:", error);
@@ -227,7 +227,7 @@ function endQuiz() {
         cevaplar: userAnswers
     }).then(() => {
         console.log("Kullanıcı bilgileri kaydedildi.");
-        siralamayiGetir(); // **Sıralamayı güncelle**
+        siralamayiGetir(); 
     }).catch(error => {
         console.error("Firebase kaydedilirken bir hata oluştu:", error);
     });
@@ -236,16 +236,16 @@ function endQuiz() {
 
     resultsHTML += `</ul><h3>Toplam Puanınız: ${score}</h3>`;
     
-    // Sonuçları ekrana yazdır
+   
     document.getElementById('siralama-container').innerHTML = resultsHTML;
     document.getElementById('siralama-container').style.display = 'block';
 
-    // Firebase'e kullanıcı puanı ve cevaplarını kaydet
+    
     firebase.database().ref(`kullanicilar/${userName}`).set({
         sinif: userClass,
         puan: score,
         zaman: new Date().toLocaleString(),
-        cevaplar: userAnswers // Kullanıcının tüm cevapları kaydedilir
+        cevaplar: userAnswers 
     }).then
     function siralamayiGetir() {
         firebase.database().ref("kullanicilar").orderByChild("puan").once("value", snapshot => {
@@ -256,20 +256,20 @@ function endQuiz() {
                 return;
             }
     
-            // Kullanıcının sınıfına göre sıralama ve filtreleme
+             
             const userClass = localStorage.getItem("userClass");
             const siralamaListesi = Object.entries(data)
-                .filter(([key, value]) => value.sinif === userClass) // Kullanıcının sınıfını filtrele
-                .sort(([, a], [, b]) => b.puan - a.puan) // Puana göre sıralama
+                .filter(([key, value]) => value.sinif === userClass)    
+                .sort(([, a], [, b]) => b.puan - a.puan)    
                 .map(([key, value], index) => `${index + 1}. ${key} - ${value.puan} puan (${value.sinif}. sınıf)`)
                 .join("<br>");
     
-            // Sıralama sonucunu ekrana yazdır
+            
             document.getElementById('siralama-container').innerHTML = `
                 <h2>${userClass}. Sınıf Sıralaması</h2>
                 ${siralamaListesi}
             `;
-            document.getElementById('siralama-container').style.display = 'block'; // Sıralama ekranını görünür yap
+            document.getElementById('siralama-container').style.display = 'block'; 
         }).catch(error => {
             console.error("Sıralama getirirken hata oluştu:", error);
             document.getElementById('siralama-container').innerHTML = "Sıralama verisi alınamadı.";
